@@ -1,6 +1,6 @@
 # Email Service
 
-A standalone .NET 8 Web API microservice responsible for sending emails via Gmail SMTP. Built to be consumed by multiple internal projects over HTTP, instead of each project implementing its own email logic.
+A standalone .NET 8 Web API microservice responsible for sending emails via Gmail SMTP. Built to be consumed by multiple projects over HTTP, instead of each project implementing its own email logic.
 
 ## Features
 
@@ -9,6 +9,22 @@ A standalone .NET 8 Web API microservice responsible for sending emails via Gmai
 - Automatic retry with exponential backoff (Polly) for transient SMTP failures
 - Centralized, reusable across multiple client projects
 
+## Architecture
+
+```
+Client project 
+        │  HTTP POST /api/email/send
+        ▼
+EmailController  →  IEmailQueue (Channel<T>)  →  202 Accepted returned immediately
+                            │
+                            ▼
+                 EmailSenderWorker (BackgroundService)
+                            │
+                            ▼
+                 SmtpEmailService (Polly retry pipeline)
+                            │
+                            ▼
+                     Gmail SMTP server
 ```
 
 ## Tech Stack
@@ -105,5 +121,3 @@ builder.Services.AddHttpClient<EmailApiClient>(client =>
 ```
 
 Always wrap the call in a `try/catch` for `BrokenCircuitException` — a failed email should never fail the caller's main business operation.
-
-
