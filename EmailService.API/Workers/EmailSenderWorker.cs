@@ -1,5 +1,6 @@
 ﻿
 using EmailService.API.IServices;
+using Polly.CircuitBreaker;
 
 namespace EmailService.API.Workers
 {
@@ -25,6 +26,10 @@ namespace EmailService.API.Workers
                 try
                 {
                     await emailService.SendEmailAsync(request);
+                }
+                catch (BrokenCircuitException)
+                {
+                    _logger.LogWarning("Gmail SMTP is currently unavailable, skipping email to {ToEmail}", request.To);
                 }
                 catch (Exception ex)
                 {

@@ -39,3 +39,4 @@ D:\Web Course\Projects\EmailService\EmailService.API\obj\Debug\net8.0\ref\EmailS
 D:\Web Course\Projects\EmailService\EmailService.API\bin\Debug\net8.0\Polly.dll
 D:\Web Course\Projects\EmailService\EmailService.API\bin\Debug\net8.0\Polly.Core.dll
 D:\Web Course\Projects\EmailService\EmailService.API\bin\Debug\net8.0\Polly.Extensions.dll
+D:\Web Course\Projects\EmailService\EmailService.API\obj\Debug\net8.0\EmailService.API.sourcelink.json

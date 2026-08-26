@@ -3,6 +3,8 @@ using EmailService.API.Services;
 using EmailService.API.Workers;
 using Polly;
 using Polly.Retry;
+using Polly.CircuitBreaker;
+
 namespace EmailService.API
 {
     public class Program
@@ -29,6 +31,13 @@ namespace EmailService.API
                     MaxRetryAttempts = 3,
                     BackoffType = DelayBackoffType.Exponential,
                     Delay = TimeSpan.FromSeconds(2),
+                });
+                pipelineBuilder.AddCircuitBreaker(new CircuitBreakerStrategyOptions
+                {
+                    FailureRatio = 0.7,
+                    MinimumThroughput = 5,
+                    SamplingDuration = TimeSpan.FromSeconds(30),
+                    BreakDuration = TimeSpan.FromSeconds(30),
                     ShouldHandle = new PredicateBuilder().Handle<Exception>()
                 });
             });
